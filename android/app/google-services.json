@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "534169123465",
+    "project_id": "the-amnesiacs-best-friend",
+    "storage_bucket": "the-amnesiacs-best-friend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534169123465:android:48fe6747dddba79dc02458",
+        "android_client_info": {
+          "package_name": "io.github.incplusplus.tabf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534169123465-je2mppc101p59aerbeqlumpmugkrfu75.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.incplusplus.tabf",
+            "certificate_hash": "1131f4d16aaa393a891bd2b370d20b423964d20d"
+          }
+        },
+        {
+          "client_id": "534169123465-0h1u67a7m3tthmal5mfjo017sevgeh56.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdkW5t3aZBcFtu0XLA-Qr9EmpCR7064j0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534169123465-0h1u67a7m3tthmal5mfjo017sevgeh56.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
