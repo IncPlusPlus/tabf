@@ -32,4 +32,4 @@ change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
   $CHANGES
   ***
-  For full changes, see the [comparison between $PREVIOUS_TAG and v$NEXT_PATCH_VERSION](https://github.com/IncPlusPlus/tabf/compare/v$PREVIOUS_TAG...v$NEXT_PATCH_VERSION)
+  For full changes, see the [comparison between $PREVIOUS_TAG and v$NEXT_PATCH_VERSION](https://github.com/IncPlusPlus/tabf/compare/$PREVIOUS_TAG...v$NEXT_PATCH_VERSION)
