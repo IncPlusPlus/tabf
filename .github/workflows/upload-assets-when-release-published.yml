@@ -1,8 +1,7 @@
 name: Upload assets when release published
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]
 jobs:
   release:
     runs-on: ubuntu-latest
