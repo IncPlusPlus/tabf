@@ -15,12 +15,12 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '15.x'
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: 'stable' # or: 'beta', 'dev' or 'master'
-    - run: flutter pub get
-    - run: flutter test
-    - run: flutter build apk
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '15.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable' # or: 'beta', 'dev' or 'master'
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk
