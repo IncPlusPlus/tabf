@@ -34,10 +34,14 @@ jobs:
           key_password: ${{ secrets.SIGNING_KEY_PASSWORD }}
       - name: Build APK
         run: flutter build apk --release
+      - name: Name APK file with version number
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/tabf-$current_tag.apk
+        env:
+          current_tag: ${{ github.ref }}
       - name: Add APK to release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/app/outputs/flutter-apk/app.apk
+            build/app/outputs/flutter-apk/tabf-${{ github.ref }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
