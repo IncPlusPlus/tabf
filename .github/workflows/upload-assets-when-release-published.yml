@@ -35,13 +35,14 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
       - name: Name APK file with version number
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/tabf-$current_tag.apk
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/tabf-$(echo $current_tag | grep -o v.*).apk
         env:
           current_tag: ${{ github.ref }}
       - name: Add APK to release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/app/outputs/flutter-apk/tabf-${{ github.ref }}.apk
+            build/app/outputs/flutter-apk/tabf-$(echo $current_tag | grep -o v.*).apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          current_tag: ${{ github.ref }}
