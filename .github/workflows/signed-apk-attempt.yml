@@ -1,4 +1,4 @@
-name: Build
+name: Build and Test
 on: [push]
 jobs:
   main:
@@ -23,25 +23,7 @@ jobs:
           channel: 'stable' # or: 'beta', 'dev' or 'master'
       - run: flutter pub get
       - run: flutter test
-      - name: Create upload-keystore.jks
-        id: write_file
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'upload-keystore.jks'
-          encodedString: ${{ secrets.KEYSTORE }}
-      - name: Create key.properties
-        run: |
-          echo "storePassword=$store_password" >> android/key.properties
-          echo "keyPassword=$key_password" >> android/key.properties
-          echo "keyAlias=upload" >> android/key.properties
-          echo "storeFile=$store_file_path" >> android/key.properties
-        env:
-          store_file_path: ${{ steps.write_file.outputs.filePath }}
-          store_password: ${{ secrets.SIGNING_STORE_PASSWORD }}
-          key_password: ${{ secrets.SIGNING_KEY_PASSWORD }}
-      - name: Build APK
-        run: flutter build apk --release
-      - uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact
-          path: build/app/outputs/flutter-apk/app.apk
+#      - uses: actions/upload-artifact@v2
+#        with:
+#          name: my-artifact
+#          path: build/app/outputs/flutter-apk/app.apk

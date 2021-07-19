@@ -1,0 +1,46 @@
+name: Upload assets when release published
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Java
+        uses: actions/setup-java@v1
+          with:
+            java-version: '15.x'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable' # or: 'beta', 'dev' or 'master'
+      - name: Create upload-keystore.jks
+          id: write_file
+          uses: timheuer/base64-to-file@v1
+          with:
+            fileName: 'upload-keystore.jks'
+            encodedString: ${{ secrets.KEYSTORE }}
+      - name: Create key.properties
+        run: |
+          echo "storePassword=$store_password" >> android/key.properties
+          echo "keyPassword=$key_password" >> android/key.properties
+          echo "keyAlias=upload" >> android/key.properties
+          echo "storeFile=$store_file_path" >> android/key.properties
+        env:
+          store_file_path: ${{ steps.write_file.outputs.filePath }}
+          store_password: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          key_password: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      - name: Build APK
+        run: flutter build apk --release
+      - name: Add APK to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
