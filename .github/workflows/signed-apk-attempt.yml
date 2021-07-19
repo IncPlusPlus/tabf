@@ -1,7 +1,7 @@
 name: Signed APK Attempt
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Setup:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
@@ -22,6 +22,10 @@ jobs:
         with:
           channel: 'stable' # or: 'beta', 'dev' or 'master'
       - run: flutter pub get
+  Build:
+    needs: Setup
+    runs-on: ubuntu-latest
+    steps:
       - run: flutter test
       - run: flutter build apk
       - uses: actions/upload-artifact@v2
