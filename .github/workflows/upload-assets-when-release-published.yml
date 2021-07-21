@@ -43,6 +43,7 @@ jobs:
       - name: Add APK to release
         uses: softprops/action-gh-release@v1
         with:
+          prerelease: true
           files: |
             build/app/outputs/flutter-apk/tabf-v*.apk
         env:
