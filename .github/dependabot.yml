@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # Enable version updates for Flutter (if it ever gets supported in the future)
+#  - package-ecosystem: "flutter"
+#    # Look for `pubspec.yaml` and `lock` files in the `root` directory
+#    directory: "/"
+#    # Check pub for updates every week
+#    schedule:
+#      interval: weekly
+#    open-pull-requests-limit: 10
+#    target-branch: main
+#    assignees:
+#      - IncPlusPlus
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    target-branch: main
+    assignees:
+      - IncPlusPlus
