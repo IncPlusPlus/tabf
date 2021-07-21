@@ -3,11 +3,50 @@ on:
   release:
     types: [published]
 jobs:
-  release:
+  version:
+    name: Create version number
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Fetch all history for all tags and branches
+        run: |
+          git config remote.origin.url https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+          git fetch --prune --depth=10000
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.3
+        with:
+          versionSpec: '5.2.x'
+      - name: Use GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.3
+      - name: Create version.txt with nuGetVersion
+        run: echo ${{ steps.gitversion.outputs.nuGetVersion  }} > version.txt
+      - name: Upload version.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: gitversion
+          path: version.txt
+  build:
+    name: Build APK and AppBundle
+    runs-on: ubuntu-latest
+    needs: [ version ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get version.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: gitversion
+      - name: Create new file without newline char from version.txt
+        run: tr -d '\n' < version.txt > version1.txt
+      - name: Read version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: version1.txt
+      - name: Update version in YAML
+        run: sed -i 's/99.99.99+99/${{ steps.version.outputs.content }}+${{ github.run_number }}/g' pubspec.yaml
       - name: Set up Java
         uses: actions/setup-java@v1
         with:
@@ -32,14 +71,39 @@ jobs:
           store_file_path: ${{ steps.write_file.outputs.filePath }}
           store_password: ${{ secrets.SIGNING_STORE_PASSWORD }}
           key_password: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      - run: flutter pub get
+      - run: flutter test
       - name: Build APK
         run: flutter build apk --release
       - name: Build AppBundle
         run: flutter build appbundle --release
-      - name: Name APK file with version number
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/tabf-$(echo $current_tag | grep -o v.*).apk
         env:
           current_tag: ${{ github.ref }}
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Upload AppBundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
+  release:
+    name: Release app to Play Store, GH Release, and Heroku
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get APK from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: apk
+      - name: Get AppBundle from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: appbundle
       - name: Add APK to release
         uses: softprops/action-gh-release@v1
         with:
