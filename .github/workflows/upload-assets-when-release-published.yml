@@ -34,6 +34,8 @@ jobs:
           key_password: ${{ secrets.SIGNING_KEY_PASSWORD }}
       - name: Build APK
         run: flutter build apk --release
+      - name: Build AppBundle
+        run: flutter build appbundle --release
       - name: Name APK file with version number
         run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/tabf-$(echo $current_tag | grep -o v.*).apk
         env:
@@ -41,6 +43,7 @@ jobs:
       - name: Add APK to release
         uses: softprops/action-gh-release@v1
         with:
+          prerelease: true
           files: |
             build/app/outputs/flutter-apk/tabf-v*.apk
         env:
@@ -52,3 +55,11 @@ jobs:
           from_branch: main
           target_branch: heroku-deploy
           github_token: ${{ github.token }}
+      - name: Upload to Google Play internal testing track
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: io.github.incplusplus.tabf
+          releaseFiles: buiod/app/build/outputs/bundle/release/app-release.aab
+          track: internal
+#          whatsNewDirectory: distribution/whatsnew
