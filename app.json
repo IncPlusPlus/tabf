@@ -1,0 +1,10 @@
+{
+  "buildpacks": [
+    {
+      "url": "ee/heroku-buildpack-flutter-light"
+    },
+    {
+      "url": "heroku-community/static"
+    }
+  ]
+}
