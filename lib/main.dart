@@ -81,7 +81,7 @@ Route? _doGenerateRoute(RouteSettings settings) {
   switch (path) {
     case '/note':
       {
-        final note = (settings.arguments as Map? ?? {})['note'];
+        // final note = (settings.arguments as Map? ?? {})['note'];
         return _buildRoute(settings, (_) => NoteEditor());
       }
     default:
