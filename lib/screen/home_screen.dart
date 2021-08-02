@@ -10,7 +10,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) => Container(
-    child: Text("Signed in successfully!"),
-  );
+        child: Text("Signed in successfully!"),
+      );
 }
-

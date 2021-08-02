@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart' show GoogleSignIn;
 import 'package:tabf/styles.dart';
 
-
 class LoginScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LoginScreenState();
@@ -30,126 +29,130 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: Theme(
-      data: ThemeData(primarySwatch: kAccentColorLight).copyWith(
-        buttonTheme: ButtonTheme.of(context).copyWith(
-          buttonColor: kAccentColorLight,
-          textTheme: ButtonTextTheme.primary,
-        ),
-      ),
-      child: Container(
-        alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: const BoxConstraints(
-              maxWidth: 560,
+        body: Theme(
+          data: ThemeData(primarySwatch: kAccentColorLight).copyWith(
+            buttonTheme: ButtonTheme.of(context).copyWith(
+              buttonColor: kAccentColorLight,
+              textTheme: ButtonTextTheme.primary,
             ),
-            padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 48),
-            child: Form(
-              key: _loginForm,
-              child: Column(
-                children: <Widget>[
-                  Image.asset('assets/images/thumbtack_intro.png'),
-                  const SizedBox(height: 32),
-                  const Text(
-                    'Capture anything',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeights.medium,
-                    ),
+          ),
+          child: Container(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 560,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 100, horizontal: 48),
+                child: Form(
+                  key: _loginForm,
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset('assets/images/thumbtack_intro.png'),
+                      const SizedBox(height: 32),
+                      const Text(
+                        'Capture anything',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeights.medium,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      if (_useEmailSignIn) ..._buildEmailSignInFields(),
+                      if (!_useEmailSignIn) ..._buildGoogleSignInFields(),
+                      if (_errorMessage != null) _buildLoginMessage(),
+                    ],
                   ),
-                  const SizedBox(height: 32),
-                  if (_useEmailSignIn) ..._buildEmailSignInFields(),
-                  if (!_useEmailSignIn) ..._buildGoogleSignInFields(),
-                  if (_errorMessage != null) _buildLoginMessage(),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   List<Widget> _buildGoogleSignInFields() => [
-    Padding(
-      padding: const EdgeInsets.all(0),
-      child: ElevatedButton(
-        onPressed: _signInWithGoogle,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Image.asset('assets/images/google.png', width: 40),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40 / 1.618),
-              child: const Text('Continue with Google'),
+        Padding(
+          padding: const EdgeInsets.all(0),
+          child: ElevatedButton(
+            onPressed: _signInWithGoogle,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Image.asset('assets/images/google.png', width: 40),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40 / 1.618),
+                  child: const Text('Continue with Google'),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-    TextButton(
-      child: Text('Sign in with email'),
-      onPressed: () => setState(() {
-        _useEmailSignIn = true;
-      }),
-    ),
-    if (_loggingIn)
-      Container(
-        width: 22,
-        height: 22,
-        margin: const EdgeInsets.only(top: 12),
-        child: const CircularProgressIndicator(),
-      ),
-  ];
+        TextButton(
+          child: Text('Sign in with email'),
+          onPressed: () => setState(() {
+            _useEmailSignIn = true;
+          }),
+        ),
+        if (_loggingIn)
+          Container(
+            width: 22,
+            height: 22,
+            margin: const EdgeInsets.only(top: 12),
+            child: const CircularProgressIndicator(),
+          ),
+      ];
 
   List<Widget> _buildEmailSignInFields() => [
-    TextFormField(
-      controller: _emailController,
-      decoration: const InputDecoration(
-        hintText: 'Email',
-      ),
-      validator: (value) => value == null || value.isEmpty ? 'Please input your email' : null,
-    ),
-    TextFormField(
-      controller: _passwordController,
-      decoration: const InputDecoration(
-        hintText: 'Password',
-      ),
-      validator: (value) => value == null || value.isEmpty ? 'Please input your password' : null,
-      obscureText: true,
-    ),
-    const SizedBox(height: 16),
-    _buildEmailSignInButton(),
-    if (_loggingIn) const LinearProgressIndicator(),
-    TextButton(
-      child: Text('Use Google Sign In'),
-      onPressed: () => setState(() {
-        _useEmailSignIn = false;
-      }),
-    ),
-  ];
+        TextFormField(
+          controller: _emailController,
+          decoration: const InputDecoration(
+            hintText: 'Email',
+          ),
+          validator: (value) =>
+              value == null || value.isEmpty ? 'Please input your email' : null,
+        ),
+        TextFormField(
+          controller: _passwordController,
+          decoration: const InputDecoration(
+            hintText: 'Password',
+          ),
+          validator: (value) => value == null || value.isEmpty
+              ? 'Please input your password'
+              : null,
+          obscureText: true,
+        ),
+        const SizedBox(height: 16),
+        _buildEmailSignInButton(),
+        if (_loggingIn) const LinearProgressIndicator(),
+        TextButton(
+          child: Text('Use Google Sign In'),
+          onPressed: () => setState(() {
+            _useEmailSignIn = false;
+          }),
+        ),
+      ];
 
   Widget _buildEmailSignInButton() => ElevatedButton(
-    onPressed: _signInWithEmail,
-    child: Container(
-      height: 40,
-      alignment: Alignment.center,
-      child: const Text('Sign in / Sign up'),
-    ),
-  );
+        onPressed: _signInWithEmail,
+        child: Container(
+          height: 40,
+          alignment: Alignment.center,
+          child: const Text('Sign in / Sign up'),
+        ),
+      );
 
   Widget _buildLoginMessage() => Container(
-    alignment: Alignment.center,
-    padding: const EdgeInsets.only(top: 18),
-    child: Text(
-      _errorMessage!,
-      style: const TextStyle(
-        fontSize: 14,
-        color: kErrorColorLight,
-      ),
-    ),
-  );
+        alignment: Alignment.center,
+        padding: const EdgeInsets.only(top: 18),
+        child: Text(
+          _errorMessage!,
+          style: const TextStyle(
+            fontSize: 14,
+            color: kErrorColorLight,
+          ),
+        ),
+      );
 
   void _signInWithGoogle() async {
     _setLoggingIn();
@@ -178,7 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
     String? errMsg;
     try {
       _setLoggingIn();
-      final result = await _doEmailSignIn(_emailController.text, _passwordController.text);
+      final result =
+          await _doEmailSignIn(_emailController.text, _passwordController.text);
       debugPrint('Login result: $result');
     } on FirebaseAuthException catch (e) {
       errMsg = e.message;
@@ -195,11 +199,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<UserCredential> _doEmailSignIn(
-      String email,
-      String password, {
-        bool signUp = false,
-      }) {
-    final authFn = signUp ? _auth.createUserWithEmailAndPassword : _auth.signInWithEmailAndPassword;
+    String email,
+    String password, {
+    bool signUp = false,
+  }) {
+    final authFn = signUp
+        ? _auth.createUserWithEmailAndPassword
+        : _auth.signInWithEmailAndPassword;
     return authFn(email: email, password: password).catchError((e) {
       if (e is FirebaseAuthException && e.code == 'user-not-found') {
         return _doEmailSignIn(email, password, signUp: true);
