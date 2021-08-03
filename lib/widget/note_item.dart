@@ -5,8 +5,8 @@ import 'package:tabf/styles.dart';
 /// A single item (preview of a Note) in the Notes list.
 class NoteItem extends StatelessWidget {
   const NoteItem({
-    Key key,
-    this.note,
+    Key? key,
+    required this.note,
   }) : super(key: key);
 
   final Note note;
@@ -20,14 +20,14 @@ class NoteItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: note.color,
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          border: note.color.value == 0xFFFFFFFF ? Border.all(color: kBorderColorLight) : null,
+          border: note.color?.value == 0xFFFFFFFF ? Border.all(color: kBorderColorLight) : null,
         ),
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (note.title?.isNotEmpty == true) Text(note.title,
+            if (note.title?.isNotEmpty == true) Text(note.title!,
               style: kCardTitleLight,
               maxLines: 1,
             ),
