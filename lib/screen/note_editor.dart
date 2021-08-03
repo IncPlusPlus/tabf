@@ -137,7 +137,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
             maxLines: null,
             maxLength: 1024,
             textCapitalization: TextCapitalization.sentences,
-            readOnly: !_note.state!.canEdit,
+            readOnly: !(_note.state?.canEdit ?? true),
           ),
           const SizedBox(height: 14),
           TextField(
@@ -146,7 +146,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
             decoration: const InputDecoration.collapsed(hintText: 'Note'),
             maxLines: null,
             textCapitalization: TextCapitalization.sentences,
-            readOnly: !_note.state!.canEdit,
+            readOnly: !(_note.state?.canEdit ?? true),
           ),
         ],
       );
@@ -191,7 +191,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
               IconButton(
                 icon: const Icon(AppIcons.add_box),
                 color: kIconTintLight,
-                onPressed: _note.state!.canEdit ? () {} : null,
+                onPressed: _note.state?.canEdit ?? true ? () {} : null,
               ),
               Text('Edited ${_note.strLastModified}'),
               IconButton(

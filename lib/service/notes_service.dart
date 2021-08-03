@@ -82,10 +82,10 @@ class NoteStateUpdateCommand extends NoteCommand {
 mixin CommandHandler<T extends StatefulWidget> on State<T> {
   /// Processes the given [command].
   Future<void> processNoteCommand(
-      ScaffoldState? scaffoldState, NoteCommand command) async {
-    // if (command == null) {
-    //   return;
-    // }
+      ScaffoldState? scaffoldState, NoteCommand? command) async {
+    if (command == null) {
+      return;
+    }
     await command.execute();
     final msg = command.message;
     if (mounted && msg.isNotEmpty == true && command.isUndoable) {
