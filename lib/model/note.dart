@@ -25,11 +25,12 @@ class Note extends ChangeNotifier {
     this.state,
     DateTime createdAt,
     DateTime modifiedAt,
-  }) : this.createdAt = createdAt ?? DateTime.now(),
-    this.modifiedAt = modifiedAt ?? DateTime.now();
+  })  : this.createdAt = createdAt ?? DateTime.now(),
+        this.modifiedAt = modifiedAt ?? DateTime.now();
 
   /// Transforms the Firestore query [snapshot] into a list of [Note] instances.
-  static List<Note> fromQuery(QuerySnapshot snapshot) => snapshot != null ? snapshot.toNotes() : [];
+  static List<Note> fromQuery(QuerySnapshot snapshot) =>
+      snapshot != null ? snapshot.toNotes() : [];
 
   /// Whether this note is pinned
   bool get pinned => state == NoteState.pinned;
@@ -37,7 +38,8 @@ class Note extends ChangeNotifier {
   /// Returns an numeric form of the state
   int get stateValue => (state ?? NoteState.unspecified).index;
 
-  bool get isNotEmpty => title?.isNotEmpty == true || content?.isNotEmpty == true;
+  bool get isNotEmpty =>
+      title?.isNotEmpty == true || content?.isNotEmpty == true;
 
   /// Formatted last modified time
   String get strLastModified => DateFormat.MMMd().format(modifiedAt);
@@ -83,13 +85,13 @@ class Note extends ChangeNotifier {
 
   /// Serializes this note into a JSON object.
   Map<String, dynamic> toJson() => {
-    'title': title,
-    'content': content,
-    'color': color?.value,
-    'state': stateValue,
-    'createdAt': (createdAt ?? DateTime.now()).millisecondsSinceEpoch,
-    'modifiedAt': (modifiedAt ?? DateTime.now()).millisecondsSinceEpoch,
-  };
+        'title': title,
+        'content': content,
+        'color': color?.value,
+        'state': stateValue,
+        'createdAt': (createdAt ?? DateTime.now()).millisecondsSinceEpoch,
+        'modifiedAt': (modifiedAt ?? DateTime.now()).millisecondsSinceEpoch,
+      };
 
   /// Make a copy of this note.
   ///
@@ -97,17 +99,19 @@ class Note extends ChangeNotifier {
   /// timestamps both of `createdAt` & `modifiedAt` will be updated to `DateTime.now()`,
   /// or otherwise be identical with this note.
   Note copy({bool updateTimestamp = false}) => Note(
-    id: id,
-    createdAt: (updateTimestamp || createdAt == null) ? DateTime.now() : createdAt,
-  )..update(this, updateTimestamp: updateTimestamp);
+        id: id,
+        createdAt:
+            (updateTimestamp || createdAt == null) ? DateTime.now() : createdAt,
+      )..update(this, updateTimestamp: updateTimestamp);
 
   @override
-  bool operator ==(other) => other is Note &&
-    (other.id ?? '') == (id ?? '') &&
-    (other.title ?? '') == (title ?? '') &&
-    (other.content ?? '') == (content ?? '') &&
-    other.stateValue == stateValue &&
-    (other.color ?? 0) == (color ?? 0);
+  bool operator ==(other) =>
+      other is Note &&
+      (other.id ?? '') == (id ?? '') &&
+      (other.title ?? '') == (title ?? '') &&
+      (other.content ?? '') == (content ?? '') &&
+      other.stateValue == stateValue &&
+      (other.color ?? 0) == (color ?? 0);
 
   @override
   int get hashCode => id?.hashCode ?? super.hashCode;
@@ -130,7 +134,8 @@ extension NoteStateX on NoteState {
   bool get canEdit => this < NoteState.deleted;
 
   bool operator <(NoteState other) => (this?.index ?? 0) < (other?.index ?? 0);
-  bool operator <=(NoteState other) => (this?.index ?? 0) <= (other?.index ?? 0);
+  bool operator <=(NoteState other) =>
+      (this?.index ?? 0) <= (other?.index ?? 0);
 
   /// Message describes the state transition.
   String get message {

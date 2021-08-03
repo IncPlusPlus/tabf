@@ -57,8 +57,8 @@ class NoteStateUpdateCommand extends NoteCommand {
         return 'Note archived';
       case NoteState.pinned:
         return from == NoteState.archived
-          ? 'Note pinned and unarchived' // pin an archived note
-          : '';
+            ? 'Note pinned and unarchived' // pin an archived note
+            : '';
       default:
         switch (from) {
           case NoteState.archived:
@@ -67,7 +67,7 @@ class NoteStateUpdateCommand extends NoteCommand {
             return 'Note restored';
           default:
             return '';
-      }
+        }
     }
   }
 
@@ -81,7 +81,8 @@ class NoteStateUpdateCommand extends NoteCommand {
 /// Mixin helps handle a [NoteCommand].
 mixin CommandHandler<T extends StatefulWidget> on State<T> {
   /// Processes the given [command].
-  Future<void> processNoteCommand(ScaffoldState scaffoldState, NoteCommand command) async {
+  Future<void> processNoteCommand(
+      ScaffoldState scaffoldState, NoteCommand command) async {
     if (command == null) {
       return;
     }
@@ -102,10 +103,7 @@ mixin CommandHandler<T extends StatefulWidget> on State<T> {
 /// Add note related methods to [QuerySnapshot].
 extension NoteQuery on QuerySnapshot {
   /// Transforms the query result into a list of notes.
-  List<Note> toNotes() => docs
-    .map((d) => d.toNote())
-    .nonNull
-    .asList();
+  List<Note> toNotes() => docs.map((d) => d.toNote()).nonNull.asList();
 }
 
 /// Add note related methods to [QuerySnapshot].
@@ -136,27 +134,27 @@ extension NoteStore on Note {
   /// If this's a new note, a FireStore document will be created automatically.
   Future<dynamic> saveToFireStore(String uid) async {
     final col = notesCollection(uid);
-    return id == null
-      ? col.add(toJson())
-      : col.doc(id).update(toJson());
+    return id == null ? col.add(toJson()) : col.doc(id).update(toJson());
   }
 
   /// Update this note to the given [state].
   Future<void> updateState(NoteState state, String uid) async => id == null
-    ? updateWith(state: state) // new note
-    : updateNoteState(state, id, uid);
+      ? updateWith(state: state) // new note
+      : updateNoteState(state, id, uid);
 }
 
 /// Returns reference to the notes collection of the user [uid].
-CollectionReference notesCollection(String uid) => FirebaseFirestore.instance.collection('notes-$uid');
+CollectionReference notesCollection(String uid) =>
+    FirebaseFirestore.instance.collection('notes-$uid');
 
 /// Returns reference to the given note [id] of the user [uid].
-DocumentReference noteDocument(String id, String uid) => notesCollection(uid).doc(id);
+DocumentReference noteDocument(String id, String uid) =>
+    notesCollection(uid).doc(id);
 
 /// Update a note to the [state], using information in the [command].
 Future<void> updateNoteState(NoteState state, String id, String uid) =>
-  updateNote({'state': state?.index ?? 0}, id, uid);
+    updateNote({'state': state?.index ?? 0}, id, uid);
 
 /// Update a note [id] of user [uid] with properties [data].
 Future<void> updateNote(Map<String, dynamic> data, String id, String uid) =>
-  noteDocument(id, uid).update(data);
+    noteDocument(id, uid).update(data);
