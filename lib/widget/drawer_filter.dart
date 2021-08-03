@@ -8,19 +8,19 @@ class DrawerFilterItem extends StatelessWidget {
   /// Given a required [title], an optional leading [icon],
   /// and whether the item [isChecked].
   const DrawerFilterItem({
-    Key key,
+    Key? key,
     this.icon,
     this.iconSize = 26,
-    @required this.title,
+    required this.title,
     this.isChecked = false,
     this.onTap,
   }) : super(key: key);
 
-  final IconData icon;
+  final IconData? icon;
   final double iconSize;
   final String title;
   final bool isChecked;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => Padding(
