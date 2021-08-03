@@ -271,7 +271,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
     };
 
     if (_isDirty) {
-      _scaffoldKey.currentState?.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('The note is updated on cloud.'),
         action: SnackBarAction(
           label: 'Refresh',

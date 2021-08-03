@@ -58,11 +58,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context) => AlertDialog(
         content: const Text('Are you sure to sign out the current account?'),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: const Text('No'),
             onPressed: () => Navigator.pop(context, false),
           ),
-          FlatButton(
+          TextButton(
             child: const Text('Yes'),
             onPressed: () => Navigator.pop(context, true),
           ),

@@ -89,7 +89,7 @@ mixin CommandHandler<T extends StatefulWidget> on State<T> {
     await command.execute();
     final msg = command.message;
     if (mounted && msg.isNotEmpty == true && command.isUndoable) {
-      scaffoldState?.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(msg),
         action: SnackBarAction(
           label: 'Undo',
