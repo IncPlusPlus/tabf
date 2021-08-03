@@ -14,9 +14,9 @@ import 'package:tabf/widgets.dart';
 class NoteEditor extends StatefulWidget {
   /// Create a [NoteEditor],
   /// provides an existed [note] in edit mode, or `null` to create a new one.
-  const NoteEditor({Key key, this.note}) : super(key: key);
+  const NoteEditor({Key? key, this.note}) : super(key: key);
 
-  final Note note;
+  final Note? note;
 
   @override
   State<StatefulWidget> createState() => _NoteEditorState(note);
@@ -26,7 +26,7 @@ class NoteEditor extends StatefulWidget {
 class _NoteEditorState extends State<NoteEditor> with CommandHandler {
   /// Create a state for [NoteEditor], with an optional [note] being edited,
   /// otherwise a new one will be created.
-  _NoteEditorState(Note note)
+  _NoteEditorState(Note? note)
       : this._note = note ?? Note(),
         _originNote = note?.copy() ?? Note(),
         this._titleTextController = TextEditingController(text: note?.title),
@@ -41,7 +41,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
   Color get _noteColor => _note.color ?? kDefaultNoteColor;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  StreamSubscription<Note> _noteSubscription;
+  StreamSubscription<Note?>? _noteSubscription;
   final TextEditingController _titleTextController;
   final TextEditingController _contentTextController;
 
@@ -67,7 +67,8 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
 
   @override
   Widget build(BuildContext context) {
-    final uid = Provider.of<CurrentUser>(context).data.uid;
+    // The user data MUST exist. They're logged in at this point
+    final uid = Provider.of<CurrentUser>(context).data!.uid;
     _watchNoteDocument(uid);
     return ChangeNotifierProvider.value(
       value: _note,
@@ -136,7 +137,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
             maxLines: null,
             maxLength: 1024,
             textCapitalization: TextCapitalization.sentences,
-            readOnly: !_note.state.canEdit,
+            readOnly: !_note.state!.canEdit,
           ),
           const SizedBox(height: 14),
           TextField(
@@ -145,7 +146,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
             decoration: const InputDecoration.collapsed(hintText: 'Note'),
             maxLines: null,
             textCapitalization: TextCapitalization.sentences,
-            readOnly: !_note.state.canEdit,
+            readOnly: !_note.state!.canEdit,
           ),
         ],
       );
@@ -159,16 +160,16 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
             onPressed: () => _updateNoteState(
                 uid, _note.pinned ? NoteState.unspecified : NoteState.pinned),
           ),
-        if (_note.id != null && _note.state < NoteState.archived)
+        if (_note.id != null && _note.state! < NoteState.archived)
           IconButton(
             icon: const Icon(AppIcons.archive_outlined),
             tooltip: 'Archive',
             onPressed: () => Navigator.pop(
                 context,
                 NoteStateUpdateCommand(
-                  id: _note.id,
+                  id: _note.id!,
                   uid: uid,
-                  from: _note.state,
+                  from: _note.state!,
                   to: NoteState.archived,
                 )),
           ),
@@ -190,7 +191,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
               IconButton(
                 icon: const Icon(AppIcons.add_box),
                 color: kIconTintLight,
-                onPressed: _note.state.canEdit ? () {} : null,
+                onPressed: _note.state!.canEdit ? () {} : null,
               ),
               Text('Edited ${_note.strLastModified}'),
               IconButton(
@@ -217,8 +218,8 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 NoteActions(),
-                if (_note.state.canEdit) const SizedBox(height: 16),
-                if (_note.state.canEdit) LinearColorPicker(),
+                if (_note.state!.canEdit) const SizedBox(height: 16),
+                if (_note.state!.canEdit) LinearColorPicker(),
                 const SizedBox(height: 12),
               ],
             ),
@@ -246,9 +247,9 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
     return Future.value(true);
   }
 
-  void _watchNoteDocument(String uid) {
+  void _watchNoteDocument(String? uid) {
     if (_noteSubscription == null && uid != null && _note.id != null) {
-      _noteSubscription = noteDocument(_note.id, uid)
+      _noteSubscription = noteDocument(_note.id!, uid)
           .snapshots()
           .map((snapshot) => snapshot.exists ? snapshot.toNote() : null)
           .listen(_onCloudNoteUpdated);
@@ -256,7 +257,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
   }
 
   /// Callback when the FireStore copy of this note updated.
-  void _onCloudNoteUpdated(Note note) {
+  void _onCloudNoteUpdated(Note? note) {
     if (!mounted || note?.isNotEmpty != true || _note == note) {
       return;
     }
@@ -264,7 +265,8 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
     final refresh = () {
       _titleTextController.text = _note.title ?? '';
       _contentTextController.text = _note.content ?? '';
-      _originNote.update(note, updateTimestamp: false);
+      // Note was already null checked above
+      _originNote.update(note!, updateTimestamp: false);
       _note.update(note, updateTimestamp: false);
     };
 
@@ -294,9 +296,9 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
     processNoteCommand(
         _scaffoldKey.currentState,
         NoteStateUpdateCommand(
-          id: _note.id,
+          id: _note.id!,
           uid: uid,
-          from: _note.state,
+          from: _note.state!,
           to: state,
         ));
   }
