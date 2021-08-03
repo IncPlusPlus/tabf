@@ -218,8 +218,8 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 NoteActions(),
-                if (_note.state!.canEdit) const SizedBox(height: 16),
-                if (_note.state!.canEdit) LinearColorPicker(),
+                if (_note.state?.canEdit ?? true) const SizedBox(height: 16),
+                if (_note.state?.canEdit ?? true) LinearColorPicker(),
                 const SizedBox(height: 12),
               ],
             ),
