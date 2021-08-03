@@ -193,18 +193,18 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
     }
 
     final asGrid = filter.noteState == NoteState.deleted || _gridView;
-    final StatelessWidget Function({Key? key, required List<Note>? notes, void Function(Note p1) onTap}) factory = (asGrid ? NotesGrid.create : NotesList.create) as StatelessWidget Function({Key? key, required List<Note>? notes, void Function(Note p1) onTap});
+    final factory = asGrid ? NotesGrid.create : NotesList.create;
     final showPinned = filter.noteState == NoteState.unspecified;
 
     if (!showPinned) {
       return [
-        factory(notes: notes, onTap: _onNoteTap),
+        factory(notes: notes ?? [], onTap: _onNoteTap),
       ];
     }
 
     final partition = _partitionNotes(notes);
-    final hasPinned = partition.item1?.isNotEmpty == true;
-    final hasUnpinned = partition.item2?.isNotEmpty == true;
+    final hasPinned = partition.item1.isNotEmpty == true;
+    final hasUnpinned = partition.item2.isNotEmpty == true;
 
     final _buildLabel = (String label, [double top = 26]) => SliverToBoxAdapter(
       child: Container(
@@ -275,15 +275,15 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
   }
 
   /// Partition the note list by the pinned state
-  Tuple2<List<Note>?, List<Note>?> _partitionNotes(List<Note>? notes) {
+  Tuple2<List<Note>, List<Note>> _partitionNotes(List<Note>? notes) {
     if (notes?.isNotEmpty != true) {
       return Tuple2([], []);
     }
 
     final indexUnpinned = notes?.indexWhere((n) => !n.pinned);
     return indexUnpinned! > -1
-        ? Tuple2(notes?.sublist(0, indexUnpinned), notes?.sublist(indexUnpinned))
-        : Tuple2(notes, []);
+        ? Tuple2(notes!.sublist(0, indexUnpinned), notes.sublist(indexUnpinned))
+        : Tuple2(notes!, []);
   }
 }
 

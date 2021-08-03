@@ -130,7 +130,7 @@ extension NoteDocument on DocumentSnapshot {
     );
   }
 
-  Color _parseColor(num colorInt) =>
+  Color _parseColor(num? colorInt) =>
       Color(colorInt as int? ?? kNoteColors.first.value);
 }
 
