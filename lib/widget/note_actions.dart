@@ -11,9 +11,9 @@ class NoteActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final note = Provider.of<Note>(context);
-    final state = note?.state;
-    final id = note?.id;
-    final uid = Provider.of<CurrentUser>(context)?.data?.uid;
+    final state = note.state;
+    final id = note.id;
+    final uid = Provider.of<CurrentUser>(context).data?.uid;
 
     final textStyle = TextStyle(
       color: kHintTextColorLight,
@@ -23,12 +23,12 @@ class NoteActions extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (id != null && state < NoteState.archived) ListTile(
+        if (id != null && state! < NoteState.archived) ListTile(
           leading: const Icon(AppIcons.archive_outlined),
           title: Text('Archive', style: textStyle),
           onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
             id: id,
-            uid: uid,
+            uid: uid!,
             from: state,
             to: NoteState.archived,
             dismiss: true,
@@ -38,9 +38,9 @@ class NoteActions extends StatelessWidget {
           leading: const Icon(AppIcons.unarchive_outlined),
           title: Text('Unarchive', style: textStyle),
           onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
-            id: id,
-            uid: uid,
-            from: state,
+            id: id!,
+            uid: uid!,
+            from: state!,
             to: NoteState.unspecified,
           )),
         ),
@@ -49,8 +49,8 @@ class NoteActions extends StatelessWidget {
           title: Text('Delete', style: textStyle),
           onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
             id: id,
-            uid: uid,
-            from: state,
+            uid: uid!,
+            from: state!,
             to: NoteState.deleted,
             dismiss: true,
           )),
@@ -63,9 +63,9 @@ class NoteActions extends StatelessWidget {
           leading: const Icon(Icons.restore),
           title: Text('Restore', style: textStyle),
           onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
-            id: id,
-            uid: uid,
-            from: state,
+            id: id!,
+            uid: uid!,
+            from: state!,
             to: NoteState.unspecified,
           )),
         ),
