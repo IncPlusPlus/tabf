@@ -12,45 +12,45 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) => Theme(
-    data: Theme.of(context).copyWith(
-      textTheme: Theme.of(context).textTheme.copyWith(
-        caption: Theme.of(context).textTheme.caption?.copyWith(
-          color: Colors.blueAccent.shade400,
-          fontWeight: FontWeights.medium,
+        data: Theme.of(context).copyWith(
+          textTheme: Theme.of(context).textTheme.copyWith(
+                caption: Theme.of(context).textTheme.caption?.copyWith(
+                      color: Colors.blueAccent.shade400,
+                      fontWeight: FontWeights.medium,
+                    ),
+              ),
         ),
-      ),
-    ),
-    child: Builder(
-      builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints.tightFor(width: 720),
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  _buildCaption(context, 'ACCOUNT'),
-                  ListTile(
-                    title: Text('Sign out'),
-                    onTap: () => _signOut(context),
+        child: Builder(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: const Text('Settings'),
+            ),
+            body: SingleChildScrollView(
+              child: Center(
+                child: Container(
+                  constraints: const BoxConstraints.tightFor(width: 720),
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      _buildCaption(context, 'ACCOUNT'),
+                      ListTile(
+                        title: Text('Sign out'),
+                        onTap: () => _signOut(context),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildCaption(BuildContext context, String title) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Text('ACCOUNT', style: Theme.of(context).textTheme.caption),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text('ACCOUNT', style: Theme.of(context).textTheme.caption),
+      );
 
   void _signOut(BuildContext context) async {
     final yes = await showDialog<bool>(

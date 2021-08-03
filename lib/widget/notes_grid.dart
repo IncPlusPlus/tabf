@@ -19,31 +19,33 @@ class NotesGrid extends StatelessWidget {
     Key? key,
     required List<Note> notes,
     void Function(Note)? onTap,
-  }) => NotesGrid(
-    key: key,
-    notes: notes,
-    onTap: onTap,
-  );
+  }) =>
+      NotesGrid(
+        key: key,
+        notes: notes,
+        onTap: onTap,
+      );
 
   @override
   Widget build(BuildContext context) => SliverPadding(
-    padding: const EdgeInsets.symmetric(horizontal: 10),
-    sliver: SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200.0,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 10.0,
-        childAspectRatio: 1 / 1.2,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) => _noteItem(context, notes[index]),
-        childCount: notes.length,
-      ),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200.0,
+            mainAxisSpacing: 10.0,
+            crossAxisSpacing: 10.0,
+            childAspectRatio: 1 / 1.2,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) =>
+                _noteItem(context, notes[index]),
+            childCount: notes.length,
+          ),
+        ),
+      );
 
   Widget _noteItem(BuildContext context, Note note) => InkWell(
-    onTap: () => onTap?.call(note),
-    child: NoteItem(note: note),
-  );
+        onTap: () => onTap?.call(note),
+        child: NoteItem(note: note),
+      );
 }

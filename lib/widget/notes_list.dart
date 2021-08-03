@@ -19,25 +19,28 @@ class NotesList extends StatelessWidget {
     Key? key,
     required List<Note> notes,
     void Function(Note)? onTap,
-  }) => NotesList(
-    key: key,
-    notes: notes,
-    onTap: onTap,
-  );
+  }) =>
+      NotesList(
+        key: key,
+        notes: notes,
+        onTap: onTap,
+      );
 
   @override
   Widget build(BuildContext context) => SliverPadding(
-    padding: const EdgeInsets.symmetric(horizontal: 10),
-    sliver: SliverList(
-      delegate: SliverChildListDelegate(
-        notes.flatMapIndexed((i, note) => <Widget>[
-          InkWell(
-            onTap: () => onTap?.call(note),
-            child: NoteItem(note: note),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate(
+            notes
+                .flatMapIndexed((i, note) => <Widget>[
+                      InkWell(
+                        onTap: () => onTap?.call(note),
+                        child: NoteItem(note: note),
+                      ),
+                      if (i < notes.length - 1) const SizedBox(height: 10),
+                    ])
+                .asList(),
           ),
-          if (i < notes.length - 1) const SizedBox(height: 10),
-        ]).asList(),
-      ),
-    ),
-  );
+        ),
+      );
 }

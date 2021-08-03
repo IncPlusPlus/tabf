@@ -23,52 +23,64 @@ class NoteActions extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (id != null && state! < NoteState.archived) ListTile(
-          leading: const Icon(AppIcons.archive_outlined),
-          title: Text('Archive', style: textStyle),
-          onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
-            id: id,
-            uid: uid!,
-            from: state,
-            to: NoteState.archived,
-            dismiss: true,
-          )),
-        ),
-        if (state == NoteState.archived) ListTile(
-          leading: const Icon(AppIcons.unarchive_outlined),
-          title: Text('Unarchive', style: textStyle),
-          onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
-            id: id!,
-            uid: uid!,
-            from: state!,
-            to: NoteState.unspecified,
-          )),
-        ),
-        if (id != null && state != NoteState.deleted) ListTile(
-          leading: const Icon(AppIcons.delete_outline),
-          title: Text('Delete', style: textStyle),
-          onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
-            id: id,
-            uid: uid!,
-            from: state!,
-            to: NoteState.deleted,
-            dismiss: true,
-          )),
-        ),
+        if (id != null && state! < NoteState.archived)
+          ListTile(
+            leading: const Icon(AppIcons.archive_outlined),
+            title: Text('Archive', style: textStyle),
+            onTap: () => Navigator.pop(
+                context,
+                NoteStateUpdateCommand(
+                  id: id,
+                  uid: uid!,
+                  from: state,
+                  to: NoteState.archived,
+                  dismiss: true,
+                )),
+          ),
+        if (state == NoteState.archived)
+          ListTile(
+            leading: const Icon(AppIcons.unarchive_outlined),
+            title: Text('Unarchive', style: textStyle),
+            onTap: () => Navigator.pop(
+                context,
+                NoteStateUpdateCommand(
+                  id: id!,
+                  uid: uid!,
+                  from: state!,
+                  to: NoteState.unspecified,
+                )),
+          ),
+        if (id != null && state != NoteState.deleted)
+          ListTile(
+            leading: const Icon(AppIcons.delete_outline),
+            title: Text('Delete', style: textStyle),
+            onTap: () => Navigator.pop(
+                context,
+                NoteStateUpdateCommand(
+                  id: id,
+                  uid: uid!,
+                  from: state!,
+                  to: NoteState.deleted,
+                  dismiss: true,
+                )),
+          ),
 //        if (id != null) ListTile(
 //          leading: const Icon(AppIcons.copy),
 //          title: Text('Make a copy', style: textStyle),
 //        ),
-        if (state == NoteState.deleted) ListTile(
-          leading: const Icon(Icons.restore),
-          title: Text('Restore', style: textStyle),
-          onTap: () => Navigator.pop(context, NoteStateUpdateCommand(
-            id: id!,
-            uid: uid!,
-            from: state!,
-            to: NoteState.unspecified,
-          )),
-        ),
+        if (state == NoteState.deleted)
+          ListTile(
+            leading: const Icon(Icons.restore),
+            title: Text('Restore', style: textStyle),
+            onTap: () => Navigator.pop(
+                context,
+                NoteStateUpdateCommand(
+                  id: id!,
+                  uid: uid!,
+                  from: state!,
+                  to: NoteState.unspecified,
+                )),
+          ),
         ListTile(
           leading: const Icon(AppIcons.share_outlined),
           title: Text('Send', style: textStyle),
