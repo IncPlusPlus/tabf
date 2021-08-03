@@ -16,8 +16,8 @@ abstract class NoteCommand {
 
   /// Defines an undoable action to a note, provides the note [id], and current user [uid].
   const NoteCommand({
-    @required this.id,
-    @required this.uid,
+    required this.id,
+    required this.uid,
     this.dismiss = false,
   });
 
@@ -41,10 +41,10 @@ class NoteStateUpdateCommand extends NoteCommand {
 
   /// Create a [NoteCommand] to update state of a note [from] the current state [to] another.
   NoteStateUpdateCommand({
-    @required String id,
-    @required String uid,
-    @required this.from,
-    @required this.to,
+    required String id,
+    required String uid,
+    required this.from,
+    required this.to,
     bool dismiss = false,
   }) : super(id: id, uid: uid, dismiss: dismiss);
 
@@ -82,13 +82,13 @@ class NoteStateUpdateCommand extends NoteCommand {
 mixin CommandHandler<T extends StatefulWidget> on State<T> {
   /// Processes the given [command].
   Future<void> processNoteCommand(
-      ScaffoldState scaffoldState, NoteCommand command) async {
-    if (command == null) {
-      return;
-    }
+      ScaffoldState? scaffoldState, NoteCommand command) async {
+    // if (command == null) {
+    //   return;
+    // }
     await command.execute();
     final msg = command.message;
-    if (mounted && msg?.isNotEmpty == true && command.isUndoable) {
+    if (mounted && msg.isNotEmpty == true && command.isUndoable) {
       scaffoldState?.showSnackBar(SnackBar(
         content: Text(msg),
         action: SnackBarAction(
@@ -103,28 +103,35 @@ mixin CommandHandler<T extends StatefulWidget> on State<T> {
 /// Add note related methods to [QuerySnapshot].
 extension NoteQuery on QuerySnapshot {
   /// Transforms the query result into a list of notes.
-  List<Note> toNotes() => docs.map((d) => d.toNote()).nonNull.asList();
+  List<Note> toNotes() => docs
+      .map((d) => d.toNote())
+      .nonNull
+      // All member aren't null anymore so we can cast to the non-nullable type
+      .map((e) => e as Note)
+      .asList();
 }
 
 /// Add note related methods to [QuerySnapshot].
 extension NoteDocument on DocumentSnapshot {
   /// Transforms the query result into a list of notes.
-  Note toNote() {
+  /// Returns null if it doesn't exist.
+  Note? toNote() {
     if (!exists) return null;
 
-    final data = this.data();
     return Note(
       id: id,
-      title: data['title'],
-      content: data['content'],
-      color: _parseColor(data['color']),
-      state: NoteState.values[data['state'] ?? 0],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(data['createdAt'] ?? 0),
-      modifiedAt: DateTime.fromMillisecondsSinceEpoch(data['modifiedAt'] ?? 0),
+      // https://stackoverflow.com/a/67813233/1687436
+      title: this['title'],
+      content: this['content'],
+      color: _parseColor(this['color']),
+      state: NoteState.values[this['state'] ?? 0],
+      createdAt: DateTime.fromMillisecondsSinceEpoch(this['createdAt'] ?? 0),
+      modifiedAt: DateTime.fromMillisecondsSinceEpoch(this['modifiedAt'] ?? 0),
     );
   }
 
-  Color _parseColor(num colorInt) => Color(colorInt ?? kNoteColors.first.value);
+  Color _parseColor(num colorInt) =>
+      Color(colorInt as int? ?? kNoteColors.first.value);
 }
 
 /// Add FireStore related methods to the [Note] model.
@@ -140,7 +147,7 @@ extension NoteStore on Note {
   /// Update this note to the given [state].
   Future<void> updateState(NoteState state, String uid) async => id == null
       ? updateWith(state: state) // new note
-      : updateNoteState(state, id, uid);
+      : updateNoteState(state, id!, uid);
 }
 
 /// Returns reference to the notes collection of the user [uid].
@@ -153,7 +160,7 @@ DocumentReference noteDocument(String id, String uid) =>
 
 /// Update a note to the [state], using information in the [command].
 Future<void> updateNoteState(NoteState state, String id, String uid) =>
-    updateNote({'state': state?.index ?? 0}, id, uid);
+    updateNote({'state': state.index}, id, uid);
 
 /// Update a note [id] of user [uid] with properties [data].
 Future<void> updateNote(Map<String, dynamic> data, String id, String uid) =>
