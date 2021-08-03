@@ -7,18 +7,18 @@ import 'note_item.dart';
 /// Grid view of [Note]s.
 class NotesGrid extends StatelessWidget {
   final List<Note> notes;
-  final void Function(Note) onTap;
+  final void Function(Note)? onTap;
 
   const NotesGrid({
-    Key key,
-    @required this.notes,
+    Key? key,
+    required this.notes,
     this.onTap,
   }) : super(key: key);
 
   static NotesGrid create({
-    Key key,
-    @required List<Note> notes,
-    void Function(Note) onTap,
+    Key? key,
+    required List<Note> notes,
+    void Function(Note)? onTap,
   }) => NotesGrid(
     key: key,
     notes: notes,
