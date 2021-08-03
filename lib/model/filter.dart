@@ -9,7 +9,7 @@ class NoteFilter extends ChangeNotifier {
   /// The state of note to search.
   NoteState get noteState => _noteState;
   set noteState(NoteState value) {
-    if (value != null && value != _noteState) {
+    if (value != _noteState) {
       _noteState = value;
       notifyListeners();
     }
