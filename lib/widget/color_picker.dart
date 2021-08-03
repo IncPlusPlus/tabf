@@ -8,7 +8,7 @@ import 'package:tabf/styles.dart';
 /// Note color picker in a horizontal list style.
 class LinearColorPicker extends StatelessWidget {
   /// Returns color of the note, fallbacks to the default color.
-  Color _currColor(Note note) => note?.color ?? kDefaultNoteColor;
+  Color _currColor(Note note) => note.color ?? kDefaultNoteColor;
 
   @override
   Widget build(BuildContext context) {
