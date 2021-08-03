@@ -8,13 +8,13 @@ import 'package:tabf/services.dart' show NoteQuery;
 
 /// Data model of a note.
 class Note extends ChangeNotifier {
-  final String id;
-  String title;
-  String content;
-  Color color;
-  NoteState state;
-  final DateTime createdAt;
-  DateTime modifiedAt;
+  final String? id;
+  String? title;
+  String? content;
+  Color? color;
+  NoteState? state;
+  final DateTime? createdAt;
+  DateTime? modifiedAt;
 
   /// Instantiates a [Note].
   Note({
@@ -23,13 +23,13 @@ class Note extends ChangeNotifier {
     this.content,
     this.color,
     this.state,
-    DateTime createdAt,
-    DateTime modifiedAt,
+    DateTime? createdAt,
+    DateTime? modifiedAt,
   })  : this.createdAt = createdAt ?? DateTime.now(),
         this.modifiedAt = modifiedAt ?? DateTime.now();
 
   /// Transforms the Firestore query [snapshot] into a list of [Note] instances.
-  static List<Note> fromQuery(QuerySnapshot snapshot) =>
+  static List<Note> fromQuery(QuerySnapshot? snapshot) =>
       snapshot != null ? snapshot.toNotes() : [];
 
   /// Whether this note is pinned
@@ -42,7 +42,8 @@ class Note extends ChangeNotifier {
       title?.isNotEmpty == true || content?.isNotEmpty == true;
 
   /// Formatted last modified time
-  String get strLastModified => DateFormat.MMMd().format(modifiedAt);
+  String get strLastModified =>
+      modifiedAt == null ? "" : DateFormat.MMMd().format(modifiedAt!);
 
   /// Update this note with another one.
   ///
@@ -68,10 +69,10 @@ class Note extends ChangeNotifier {
   /// If [updateTimestamp] is `true`, which is the default,
   /// `modifiedAt` will be updated to `DateTime.now()`.
   Note updateWith({
-    String title,
-    String content,
-    Color color,
-    NoteState state,
+    String? title,
+    String? content,
+    Color? color,
+    NoteState? state,
     bool updateTimestamp = true,
   }) {
     if (title != null) this.title = title;
@@ -133,9 +134,12 @@ extension NoteStateX on NoteState {
   /// Checks if a note in this state can edit (modify / copy).
   bool get canEdit => this < NoteState.deleted;
 
-  bool operator <(NoteState other) => (this?.index ?? 0) < (other?.index ?? 0);
-  bool operator <=(NoteState other) =>
-      (this?.index ?? 0) <= (other?.index ?? 0);
+  bool operator <(NoteState other) => (this.index) < (other.index);
+  bool operator <=(NoteState other) => (this.index) <= (other.index);
+
+  // bool operator <(NoteState other) => (this?.index ?? 0) < (other?.index ?? 0);
+  // bool operator <=(NoteState other) =>
+  //     (this?.index ?? 0) <= (other?.index ?? 0);
 
   /// Message describes the state transition.
   String get message {
