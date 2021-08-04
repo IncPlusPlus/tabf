@@ -148,6 +148,10 @@ extension NoteStore on Note {
   Future<void> updateState(NoteState state, String uid) async => id == null
       ? updateWith(state: state) // new note
       : updateNoteState(state, id!, uid);
+
+  /// Delete a note
+  Future<void> deleteFromFirestore(String id, String uid) =>
+      noteDocument(id, uid).delete();
 }
 
 /// Returns reference to the notes collection of the user [uid].
