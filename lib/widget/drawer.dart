@@ -62,7 +62,7 @@ class AppDrawer extends StatelessWidget {
               DrawerFilterItem(
                 icon: Icons.help_outline,
                 title: 'About',
-                onTap: () => launch('https://github.com/xinthink/flutter-keep'),
+                onTap: () => launch('https://github.com/IncPlusPlus/tabf'),
               ),
             ],
           ),
