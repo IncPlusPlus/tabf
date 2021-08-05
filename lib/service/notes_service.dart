@@ -103,12 +103,21 @@ mixin CommandHandler<T extends StatefulWidget> on State<T> {
 /// Add note related methods to [QuerySnapshot].
 extension NoteQuery on QuerySnapshot {
   /// Transforms the query result into a list of notes.
-  List<Note> toNotes() => docs
-      .map((d) => d.toNote())
-      .nonNull
-      // All member aren't null anymore so we can cast to the non-nullable type
-      .map((e) => e as Note)
-      .asList();
+  List<Note> toNotes() {
+    final list = docs
+        .map((d) => d.toNote())
+        .nonNull
+        // All member aren't null anymore so we can cast to the non-nullable type
+        .map((e) => e as Note)
+        .asList();
+    /*
+     * Sort the notes so that the most recent ones appear on top.
+     * This is done here to avoid multiple sortBy calls to the Firestore
+     * which would require the creation of a composite index.
+     */
+    list.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+    return list;
+  }
 }
 
 /// Add note related methods to [QuerySnapshot].

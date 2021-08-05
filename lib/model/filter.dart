@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-
-import 'note.dart';
+import 'package:tabf/model/note.dart';
 
 /// Holds the current searching filter of notes.
 class NoteFilter extends ChangeNotifier {

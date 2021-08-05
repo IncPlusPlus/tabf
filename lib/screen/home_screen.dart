@@ -288,10 +288,6 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
   Stream<List<Note>> _createNoteStream(
       BuildContext context, NoteFilter filter) {
     final user = Provider.of<CurrentUser>(context).data;
-    final sinceSignUp = DateTime.now().millisecondsSinceEpoch -
-        (user?.metadata.creationTime?.millisecondsSinceEpoch ?? 0);
-    final useIndexes = sinceSignUp >=
-        _10_min_millis; // since creating indexes takes time, avoid using composite index until later
     final collection = notesCollection(user!.uid);
     final query = filter.noteState == NoteState.unspecified
         ? collection
@@ -301,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
             .orderBy('state', descending: true) // pinned notes come first
         : collection.where('state', isEqualTo: filter.noteState.index);
 
-    return (useIndexes ? query.orderBy('createdAt', descending: true) : query)
+    return query
         .snapshots()
         .handleError((e) => debugPrint('query notes failed: $e'))
         .map((snapshot) => Note.fromQuery(snapshot));
@@ -366,5 +362,3 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
     }
   }
 }
-
-const _10_min_millis = 600000;
