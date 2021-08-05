@@ -8,7 +8,7 @@ import 'package:tabf/icons.dart' show AppIcons;
 import 'package:tabf/models.dart'
     show CurrentUser, Note, NoteState, NoteStateX, NoteFilter;
 import 'package:tabf/services.dart'
-    show CommandHandler, NoteCommand, notesCollection;
+    show CommandHandler, NoteCommand, notesCollection, NoteStore;
 import 'package:tabf/styles.dart';
 import 'package:tabf/utils.dart';
 import 'package:tabf/widgets.dart' show AppDrawer, NotesGrid, NotesList;
@@ -86,29 +86,39 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
         ),
       );
 
-  Widget _appBar(BuildContext context, NoteFilter filter, Widget? bottom) =>
-      filter.noteState < NoteState.archived
-          ? SliverAppBar(
-              floating: true,
-              snap: true,
-              title: _topActions(context),
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-              titleSpacing: 0,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            )
-          : SliverAppBar(
-              floating: true,
-              snap: true,
-              title: Text(filter.noteState.filterName),
-              leading: IconButton(
-                icon: const Icon(Icons.menu),
-                tooltip: 'Menu',
-                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-              ),
-              automaticallyImplyLeading: false,
-            );
+  Widget _appBar(BuildContext context, NoteFilter filter, Widget? bottom) {
+    List<Widget> actions = [];
+    if (NoteState.archived < filter.noteState) {
+      actions = [
+        IconButton(
+            onPressed: () => emptyTrash(context),
+            icon: const Icon(Icons.delete_forever))
+      ];
+    }
+    return filter.noteState < NoteState.archived
+        ? SliverAppBar(
+            floating: true,
+            snap: true,
+            title: _topActions(context),
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            titleSpacing: 0,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          )
+        : SliverAppBar(
+            floating: true,
+            snap: true,
+            title: Text(filter.noteState.filterName),
+            leading: IconButton(
+              icon: const Icon(Icons.menu),
+              tooltip: 'Menu',
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+            ),
+            automaticallyImplyLeading: false,
+            actions: actions,
+          );
+  }
 
   Widget _topActions(BuildContext context) => Container(
         // width: double.infinity,
@@ -303,5 +313,52 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
     return indexUnpinned! > -1
         ? Tuple2(notes!.sublist(0, indexUnpinned), notes.sublist(indexUnpinned))
         : Tuple2(notes!, []);
+  }
+
+  /// A shortened version of [_createNoteStream] that avoids listening
+  Stream<List<Note>> _singleUseNoteStream(
+      BuildContext context, NoteFilter filter) {
+    final user = Provider.of<CurrentUser>(context, listen: false).data;
+    final collection = notesCollection(user!.uid);
+    final query = filter.noteState == NoteState.unspecified
+        ? collection
+            .where('state',
+                isLessThan: NoteState.archived
+                    .index) // show both normal/pinned notes when no filter specified
+            .orderBy('state', descending: true) // pinned notes come first
+        : collection.where('state', isEqualTo: filter.noteState.index);
+
+    return query
+        .snapshots()
+        .handleError((e) => debugPrint('query notes failed: $e'))
+        .map((snapshot) => Note.fromQuery(snapshot));
+  }
+
+  void emptyTrash(BuildContext context) async {
+    final user = Provider.of<CurrentUser>(context, listen: false).data;
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text('Are you sure to empty the trash?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('No'),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          TextButton(
+            child: const Text('Yes'),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+        ],
+      ),
+    );
+
+    if (yes ?? false) {
+      _singleUseNoteStream(context, new NoteFilter(NoteState.deleted))
+          .first
+          .then((value) => value.forEach((Note element) {
+                element..deleteFromFirestore(element.id!, user!.uid);
+              }));
+    }
   }
 }
