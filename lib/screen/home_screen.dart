@@ -363,7 +363,6 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
           .then((value) => value.forEach((Note element) {
                 element..deleteFromFirestore(element.id!, user!.uid);
               }));
-      Navigator.pop(context);
     }
   }
 }
