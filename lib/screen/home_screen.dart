@@ -319,8 +319,27 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
         : Tuple2(notes!, []);
   }
 
+  /// A shortened version of [_createNoteStream] that avoids listening
+  Stream<List<Note>> _singleUseNoteStream(
+      BuildContext context, NoteFilter filter) {
+    final user = Provider.of<CurrentUser>(context, listen: false).data;
+    final collection = notesCollection(user!.uid);
+    final query = filter.noteState == NoteState.unspecified
+        ? collection
+        .where('state',
+        isLessThan: NoteState.archived
+            .index) // show both normal/pinned notes when no filter specified
+        .orderBy('state', descending: true) // pinned notes come first
+        : collection.where('state', isEqualTo: filter.noteState.index);
+
+    return query
+        .snapshots()
+        .handleError((e) => debugPrint('query notes failed: $e'))
+        .map((snapshot) => Note.fromQuery(snapshot));
+  }
+
   void emptyTrash(BuildContext context) async {
-    final user = Provider.of<CurrentUser>(context).data;
+    final user = Provider.of<CurrentUser>(context, listen: false).data;
     final yes = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -339,7 +358,7 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
     );
 
     if (yes ?? false) {
-      _createNoteStream(context, new NoteFilter(NoteState.deleted))
+      _singleUseNoteStream(context, new NoteFilter(NoteState.deleted))
           .first
           .then((value) => value.forEach((Note element) {
                 element..deleteFromFirestore(element.id!, user!.uid);
