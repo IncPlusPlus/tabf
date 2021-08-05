@@ -326,10 +326,10 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
     final collection = notesCollection(user!.uid);
     final query = filter.noteState == NoteState.unspecified
         ? collection
-        .where('state',
-        isLessThan: NoteState.archived
-            .index) // show both normal/pinned notes when no filter specified
-        .orderBy('state', descending: true) // pinned notes come first
+            .where('state',
+                isLessThan: NoteState.archived
+                    .index) // show both normal/pinned notes when no filter specified
+            .orderBy('state', descending: true) // pinned notes come first
         : collection.where('state', isEqualTo: filter.noteState.index);
 
     return query
