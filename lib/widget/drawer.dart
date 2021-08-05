@@ -7,7 +7,7 @@ import 'package:tabf/icons.dart';
 import 'package:tabf/styles.dart';
 import 'package:tabf/utils.dart';
 
-import 'drawer_filter.dart';
+import 'package:tabf/widget/drawer_filter.dart';
 
 /// Navigation drawer for the app.
 class AppDrawer extends StatelessWidget {

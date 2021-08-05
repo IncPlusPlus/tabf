@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tabf/models.dart' show Note;
-
-import 'note_item.dart';
+import 'package:tabf/widget/note_item.dart';
 
 /// Grid view of [Note]s.
 class NotesGrid extends StatelessWidget {
