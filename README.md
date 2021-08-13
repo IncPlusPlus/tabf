@@ -74,17 +74,9 @@ service cloud.firestore {
 ```
 6. You should be up and running. I may have forgotten a thing or two but that's most of the hard part over with
 
-## Demo video (30 pts)
+## Demo video
 
-Upload your demo video to youtube and put a link here. Basically, the video content is very much like the quick live demo of your app with the followings:
-1. Introduction
-3. Quick walkthrough of all the features of your app one by one
-
-Make it short and interesting (1-3 minutes)
-
-Sample: https://www.youtube.com/watch?v=Pr-JMqTkdEM
-
-How to record your screen: https://www.techradar.com/how-to/record-your-screen
+https://user-images.githubusercontent.com/6992149/129407574-3ac8a6fb-cbbe-4de5-b1d0-7910d9037e4b.mp4
 
 ## References
 
