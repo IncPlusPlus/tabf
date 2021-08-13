@@ -21,8 +21,8 @@ TABF is a fork of [xinthink/flutter-keep](https://github.com/xinthink/flutter-ke
 4. Sign-in via Google
 5. Offline usage
 
-## System Architecture (10 pts)
-Draw architecture diagrams of all services of your app and their relationships.
+## System Architecture
+![architecture](https://user-images.githubusercontent.com/6992149/129398251-1bb0c4be-bf9b-47de-9bce-9a124be6b0ac.png)
 
 ## Deployment (20 pts)
 List the steps on how to deploy your app on the cloud.
