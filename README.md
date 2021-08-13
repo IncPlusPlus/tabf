@@ -1,6 +1,8 @@
 # The Amnesiac's Best Friend (TABF)
 
-The release channel of this project may be seen at [https://tabf.herokuapp.com](https://tabf.herokuapp.com/).
+The release channel of this project may be seen at [https://tabf.herokuapp.com](https://tabf.herokuapp.com/). For the staging build, see [https://tabf-main-staging.herokuapp.com](https://tabf-main-staging.herokuapp.com/).
+
+There is also an Android release. You can grab the APK file from the assets of the [latest release](https://github.com/IncPlusPlus/tabf/releases/latest) or get the app [via Google Play](https://play.google.com/store/apps/details?id=io.github.incplusplus.tabf).
 
 This project uses [Effective Dart](https://dart.dev/guides/language/effective-dart) enforced by [![Pub Version](https://img.shields.io/pub/v/flutter_lints?label=flutter_lints)](https://pub.dev/packages/flutter_lints)
 
