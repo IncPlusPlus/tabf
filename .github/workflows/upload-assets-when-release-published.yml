@@ -23,7 +23,7 @@ jobs:
       - name: Create version.txt with nuGetVersion
         run: echo ${{ steps.gitversion.outputs.nuGetVersion  }} > version.txt
       - name: Upload version.txt
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: gitversion
           path: version.txt
@@ -81,12 +81,12 @@ jobs:
         env:
           current_tag: ${{ github.ref }}
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: apk
           path: build/app/outputs/flutter-apk/app-release.apk
       - name: Upload AppBundle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
