@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get version.txt
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: gitversion
       - name: Create new file without newline char from version.txt
@@ -98,11 +98,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get APK from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: apk
       - name: Get AppBundle from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: appbundle
       - name: Add APK to release
